@@ -18,7 +18,7 @@ def primeNum(num, lis):
     return True
 
 
-def random_index(num, prime, temp):
+def getRandomQuadraticResidues(prime, temp):
     # size = 100
     # prime > 2*num
     lst = []
@@ -26,18 +26,32 @@ def random_index(num, prime, temp):
         lst.append((i + temp) ** 2 % prime)
     return lst[0:-temp+1]
 
-# def lis
-def getAlpha(len, lis):
-    i = 0
-    while 2 * len > lis[i]:
-        i = i + 1
-    pri = lis[i]
-    alpha = mt.ceil(mt.sqrt(pri))
-    prime = (len + alpha) * 2
-    for i in lis:
-        if prime < i:
-            prime = i
+
+def getAlphaAndPrime(mess_length):
+    prime_list = []
+    prime = 0
+    alpha = 0
+
+    prime_list.append(2)
+
+    for i in range(3, 3 * mess_length, 2):
+        if primeNum(i, prime_list):  # lis = list of prime < 3*req_pixels
+            prime_list.append(i)
+
+    for num in prime_list:
+        if 2 * mess_length <= num:
+            prime = num
             break
+
+    alpha = mt.ceil(mt.sqrt(prime))
+    prime = (mess_length + alpha) * 2
+
+    for num in prime_list:
+        if prime < num:
+            prime = num
+            break
+
+    print(alpha, prime)
     return alpha, prime
 
 
@@ -61,21 +75,14 @@ def Encode(src, dest, message):
         n = 4
         m = 1
     total_pixels = array.size // n
-    # message += "$t3g0"
 
     # Extracting prime number and alpha value
-    # ...
     b_message = ''.join([format(ord(i), "08b") for i in message])
     req_pixels = len(b_message)
-    lis = []
-    if primeNum(2, []):
-        lis.append(2)
-    for i in range(3, 3 * req_pixels, 2):
-        if primeNum(i, lis):  # lis = list of prime < 3*req_pixels
-            lis.append(i)
-    alpha, prime = getAlpha(req_pixels, lis)
+    alpha, prime = getAlphaAndPrime(req_pixels)
+
     # Encoding prime and alpha at the end of the image
-    key = prime.__str__() + ',' + alpha.__str__() + '#'
+    key = str(prime) + ',' + str(alpha) + '#'
     print(key)
     b_key = ''.join([format(ord(i), "08b") for i in key])
     index = 0
@@ -84,12 +91,14 @@ def Encode(src, dest, message):
             array[p][m] = int(format(array[p][m], '08b')[:7] + b_key[index], 2)
             index += 1
 
-    pixels_list = random_index(req_pixels, prime, alpha)
-
+    pixels_list = getRandomQuadraticResidues(prime, alpha)
+    print(pixels_list)
     if req_pixels > total_pixels:
         print("ERROR: Need larger file size")
     else:
         index = 0
+        print(len(pixels_list))
+        print(req_pixels)
         for p in pixels_list:
             if index < req_pixels:
                 array[p][m] = int(format(array[p][m], '08b')[:7] + b_message[index], 2)
@@ -140,7 +149,7 @@ def Decode(src):
 
     # Extract message
     hidden_bits = ""
-    pixels_list = random_index(64, prime, alpha)
+    pixels_list = getRandomQuadraticResidues(prime, alpha)
 
     for p in pixels_list:
         hidden_bits += (bin(array[p][m])[2:][-1])
@@ -149,14 +158,8 @@ def Decode(src):
     print(hidden_bits)
     message = ''
     for i in range(len(hidden_bits)):
-        # if message[-5:] == '$t3g0':
-        #     break
-        # else:
         message += chr(int(hidden_bits[i], 2))
-    # if '$t3g0' in message:
     print("Hidden Message:", message)
-    # else:
-    #     print("No Hidden Message Found")
 
 
 if __name__ == '__main__':
@@ -165,7 +168,7 @@ if __name__ == '__main__':
     img.save('./pic.png')
 
     # Encrypt message
-    Encode('./conchohuan.jpg', './conchohuan_encoded.png', 'TranNguyenHuan.18521394_NguyenGiaHuy.1852405_OnQuanAn.1852221')
+    Encode('./pic.png', './pic_encoded.png', 'TranNguyenHuan.18521394_NguyenGiaHuy.1852405_OnQuanAn.1852221')
 
     # Decrypt message
-    Decode('./conchohuan_encoded.png')
+    Decode('./pic_encoded.png')
