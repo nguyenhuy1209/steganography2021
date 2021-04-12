@@ -30,7 +30,7 @@ def getRandomQuadraticResidues(prime, temp):
 def getAlphaAndPrime(mess_length):
     prime_list = []
     prime = 0
-    alpha = 0
+    # alpha = 0
 
     prime_list.append(2)
 
