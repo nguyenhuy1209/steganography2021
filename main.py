@@ -185,7 +185,7 @@ def Decode(src):
 
 if __name__ == '__main__':
     # Create an image for demo
-    img = Image.new("RGB", (128, 128), "#232323")
+    img = Image.new("RGB", (1024, 1024), "#232323")
     img.save('./pic.png')
 
     # Encrypt message
@@ -193,20 +193,3 @@ if __name__ == '__main__':
 
     # Decrypt message
     Decode('./cat_encoded.png')
-
-    # img = Image.open('./cat.png', 'r')
-    # width, height = img.size
-    # array = np.array(list(img.getdata()))
-    # if img.mode == 'RGB':
-    #     n = 3
-    #     m = 0
-    # elif img.mode == 'RGBA':
-    #     n = 4
-    #     m = 1
-    # array = array.reshape(height, width, n)
-    # print(array[-1][-1])
-    # array[-1][-1][0] -= 1
-    # array[-1][-1][1] += 1
-    # print(array[-1][-1])
-    # enc_img = Image.fromarray(array.astype('uint8'), img.mode)
-    # enc_img.save('./cat_encoded.png', format='png')

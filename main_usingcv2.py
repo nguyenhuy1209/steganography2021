@@ -112,21 +112,20 @@ def Encode(src, dest, message):
         for p in pixels_list:
             i, j = p
             if index < req_pixels:
-                # if format(img[i][j][0], '08b')[7] == 1 and b_message[index] == 0:
-                #     if img[p][1] < 255:
-                #         img[p][1] += 1
-                #     elif img[p][2] < 255:
-                #         img[p][2] += 1
-                # if format(img[p][0], '08b')[7] == 0 and b_message[index] == 1:
-                #     if img[p][1] > 0:
-                #         img[p][1] -= 1
-                #     elif img[p][2] > 0:
-                #         img[p][2] -= 1
-                img[p][0] = int(format(img[p][0], '08b')[:7] + b_message[index], 2)
+                if format(img[i][j][0], '08b')[7] == 1 and b_message[index] == 0:
+                    if img[i][j][1] < 255:
+                        img[i][j][1] += 1
+                    elif img[i][j][2] < 255:
+                        img[i][j][2] += 1
+                if format(img[i][j][0], '08b')[7] == 0 and b_message[index] == 1:
+                    if img[i][j][1] > 0:
+                        img[i][j][1] -= 1
+                    elif img[i][j][2] > 0:
+                        img[i][j][2] -= 1
+                img[i][j][0] = int(format(img[i][j][0], '08b')[:7] + b_message[index], 2)
                 index += 1
         cv2.imwrite(dest, img)
         print('Successfully encoded message!')
-
 
 def Decode(src):
     """
@@ -190,3 +189,15 @@ if __name__ == '__main__':
 
     # Decrypt message
     Decode('./cat_encoded.png')
+
+    # img1 = cv2.imread('cat.png')
+    # # print(img1)
+    # print(img1.shape)
+    # print(img1[-1][-1])
+    # print(img1[-1][-2])
+    # img1[-1][-1][1] -= 64
+    # img1[-1][-2][1] += 64
+    # print(img1[-1][-1])
+    # print(img1[-1][-2])
+    # print(img1.shape)
+    # cv2.imwrite('cat_encoded.png', img1)
