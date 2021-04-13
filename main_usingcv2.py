@@ -126,6 +126,7 @@ def Encode(src, dest, message):
                 index += 1
         cv2.imwrite(dest, img)
         print('Successfully encoded message!')
+        print('Encoded image is stored as:', dest)
 
 def Decode(src):
     """
@@ -184,11 +185,30 @@ def Decode(src):
 
 
 if __name__ == '__main__':
-    # Encrypt message
-    Encode('./cat.png', './cat_encoded.png', 'TranNguyenHuan-NguyenGiaHuy-OnQuanAn')
 
-    # Decrypt message
-    Decode('./cat_encoded.png')
+    print('1. Encode')
+    print('2. Decode')
+    prompt = input('Do you want to encode or decode? ')
+    if prompt == '1':
+        print('Please type in the cover image:')
+        src = input()
+        print('Please type in the message:')
+        mess = input()
+        filename = src.split('.')[0]
+        dest = filename + '_encoded.png'
+        Encode(src, dest, mess)
+    elif prompt == '2':
+        print('Please type in the image you wish to decode:')
+        src = input()
+        Decode(src)
+    else:
+        print('Invalid option.')
+
+    # # Encrypt message
+    # Encode('./cat.jpg', './cat_encoded.png', 'TranNguyenHuan-NguyenGiaHuy-OnQuanAn')
+
+    # # Decrypt message
+    # Decode('./cat_encoded.png')
 
     # img1 = cv2.imread('cat.png')
     # # print(img1)
