@@ -1,8 +1,5 @@
-# Python program to demonstrate
-# image steganography using OpenCV
-  
 import math as mt
-import cv2
+import cv2              # pip install opencv-python
 import numpy as np
 import random
   
@@ -86,6 +83,7 @@ def Encode(src, dest, message):
     img = cv2.imread(src)
     rows, cols, channel = img.shape
     total_pixels = img.shape[0] * img.shape[1]
+
     # Extracting prime number and alpha value
     message += 'END.'
     b_message = ''.join([format(ord(i), '08b') for i in message])
@@ -112,16 +110,6 @@ def Encode(src, dest, message):
         for p in pixels_list:
             i, j = p
             if index < req_pixels:
-                if format(img[i][j][0], '08b')[7] == 1 and b_message[index] == 0:
-                    if img[i][j][1] < 255:
-                        img[i][j][1] += 1
-                    elif img[i][j][2] < 255:
-                        img[i][j][2] += 1
-                if format(img[i][j][0], '08b')[7] == 0 and b_message[index] == 1:
-                    if img[i][j][1] > 0:
-                        img[i][j][1] -= 1
-                    elif img[i][j][2] > 0:
-                        img[i][j][2] -= 1
                 img[i][j][0] = int(format(img[i][j][0], '08b')[:7] + b_message[index], 2)
                 index += 1
         cv2.imwrite(dest, img)
@@ -185,39 +173,26 @@ def Decode(src):
 
 
 if __name__ == '__main__':
+    # print('1. Encode')
+    # print('2. Decode')
+    # prompt = input('Do you want to encode or decode? ')
+    # if prompt == '1':
+    #     print('Please type in the cover image:')
+    #     src = input()
+    #     print('Please type in the message:')
+    #     mess = input()
+    #     filename = src.split('.')[0]
+    #     dest = filename + '_encoded.png'
+    #     Encode(src, dest, mess)
+    # elif prompt == '2':
+    #     print('Please type in the image you wish to decode:')
+    #     src = input()
+    #     Decode(src)
+    # else:
+    #     print('Invalid option.')
 
-    print('1. Encode')
-    print('2. Decode')
-    prompt = input('Do you want to encode or decode? ')
-    if prompt == '1':
-        print('Please type in the cover image:')
-        src = input()
-        print('Please type in the message:')
-        mess = input()
-        filename = src.split('.')[0]
-        dest = filename + '_encoded.png'
-        Encode(src, dest, mess)
-    elif prompt == '2':
-        print('Please type in the image you wish to decode:')
-        src = input()
-        Decode(src)
-    else:
-        print('Invalid option.')
+    # Encrypt message
+    Encode('./cat.png', './cat_encoded.png', 'TranNguyenHuan-NguyenGiaHuy-OnQuanAn')
 
-    # # Encrypt message
-    # Encode('./cat.jpg', './cat_encoded.png', 'TranNguyenHuan-NguyenGiaHuy-OnQuanAn')
-
-    # # Decrypt message
-    # Decode('./cat_encoded.png')
-
-    # img1 = cv2.imread('cat.png')
-    # # print(img1)
-    # print(img1.shape)
-    # print(img1[-1][-1])
-    # print(img1[-1][-2])
-    # img1[-1][-1][1] -= 64
-    # img1[-1][-2][1] += 64
-    # print(img1[-1][-1])
-    # print(img1[-1][-2])
-    # print(img1.shape)
-    # cv2.imwrite('cat_encoded.png', img1)
+    # Decrypt message
+    Decode('./cat_encoded.png')
